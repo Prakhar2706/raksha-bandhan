@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,500&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=5">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪢</text></svg>">
 </head>
 <body>
@@ -102,7 +102,7 @@
 <!-- ================= NAV ================= -->
 <nav class="nav" id="nav">
   <a class="brand" href="#top"><span class="brand-knot">🪢</span> <span class="brand-label"><span data-sister-full>Aditi</span>'s page</span></a>
-  <div class="nav-links">
+  <div class="nav-links" id="navLinks">
     <a href="#story">Nautanki</a>
     <a href="#gallery">Gallery</a>
     <a href="#quiz">Quiz</a>
@@ -110,7 +110,11 @@
     <a href="#letter">Message</a>
   </div>
   <button id="soundBtn" class="icon-btn ringing" aria-pressed="true" title="Sound on — tap to mute">🔊</button>
+  <button id="navToggle" class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+    <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
+  </button>
 </nav>
+<div class="nav-backdrop" id="navBackdrop" hidden></div>
 
 <!-- ================= HERO ================= -->
 <header class="hero" id="top">
@@ -304,6 +308,6 @@
   </figure>
 </div>
 
-<script src="script.js"></script>
+<script src="script.js?v=5"></script>
 </body>
 </html>

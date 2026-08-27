@@ -464,17 +464,30 @@ const VOUCHERS = [
   soundBtn.classList.add("ringing");
   soundBtn.title = "Sound on — tap to mute";
 
-  // Browsers block audio until the visitor interacts, so unlock the context on
-  // the first gesture and give a small flourish once it's actually audible.
-  const unlockAudio = () => {
-    if (!soundOn) return;
-    ensureAudio();
-    if (audioCtx?.state === "suspended") audioCtx.resume();
-    SFX.shehnai();
-  };
-  addEventListener("pointerdown", unlockAudio, { once: true });
-  addEventListener("keydown", unlockAudio, { once: true });
-  addEventListener("touchstart", unlockAudio, { once: true, passive: true });
+  // Browsers refuse to start audio before the visitor interacts with the page.
+  // Try immediately (works when the site already has media engagement), then
+  // retry on the very first gesture of any kind so it feels "already on".
+  let audioReady = false;
+  function unlockAudio(playFlourish = true) {
+    if (!soundOn || audioReady) return;
+    if (!ensureAudio()) return;
+    if (audioCtx.state === "suspended") {
+      audioCtx.resume().then(() => {
+        if (audioCtx.state === "running" && !audioReady) {
+          audioReady = true;
+          if (playFlourish) SFX.shehnai();
+        }
+      }).catch(() => {});
+      return;
+    }
+    audioReady = true;
+    if (playFlourish) SFX.shehnai();
+  }
+
+  unlockAudio(false);                       // optimistic attempt on load
+  ["pointerdown", "touchstart", "click", "keydown", "scroll"].forEach(evt =>
+    addEventListener(evt, () => unlockAudio(true), { passive: true })
+  );
 
   /* ==================================================
      NAV — sticky shadow + active link
@@ -495,6 +508,37 @@ const VOUCHERS = [
   $$(".nav-links a, .icon-btn").forEach(el =>
     el.addEventListener("pointerenter", () => SFX.tick(), { passive: true })
   );
+
+  /* ---------- mobile drawer ---------- */
+  const navToggle = $("#navToggle");
+  const navBackdrop = $("#navBackdrop");
+  const navLinksBox = $("#navLinks");
+
+  function setNav(open) {
+    nav.classList.toggle("open", open);
+    navToggle.setAttribute("aria-expanded", String(open));
+    navToggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    navBackdrop.hidden = !open;
+    document.body.classList.toggle("nav-locked", open);
+    if (open) navLinksBox.querySelector("a")?.focus({ preventScroll: true });
+  }
+
+  navToggle.addEventListener("click", () => {
+    setNav(!nav.classList.contains("open"));
+    SFX.flip();
+  });
+  navBackdrop.addEventListener("click", () => setNav(false));
+  // Tapping a link should navigate, then get the drawer out of the way.
+  navLinksBox.addEventListener("click", e => {
+    if (e.target.closest("a")) setNav(false);
+  });
+  addEventListener("keydown", e => {
+    if (e.key === "Escape" && nav.classList.contains("open")) setNav(false);
+  });
+  // Resizing back to desktop must never leave the drawer state stuck on.
+  matchMedia("(min-width:761px)").addEventListener?.("change", e => {
+    if (e.matches) setNav(false);
+  });
 
   const navLinks = $$(".nav-links a");
   const sections = navLinks
