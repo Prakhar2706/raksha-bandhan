@@ -359,7 +359,7 @@ const VOUCHERS = [
   /* ==================================================
      AUDIO ENGINE — all synthesised, no asset files
      ================================================== */
-  let audioCtx = null, master = null, soundOn = false;
+  let audioCtx = null, master = null, soundOn = true;   // on by default
   const soundBtn = $("#soundBtn");
 
   function ensureAudio() {
@@ -449,6 +449,7 @@ const VOUCHERS = [
     soundBtn.setAttribute("aria-pressed", String(soundOn));
     soundBtn.textContent = soundOn ? "🔊" : "🔔";
     soundBtn.classList.toggle("ringing", soundOn);
+    soundBtn.title = soundOn ? "Sound on — tap to mute" : "Sound off — tap to unmute";
     if (soundOn) {
       ensureAudio();
       if (audioCtx?.state === "suspended") audioCtx.resume();
@@ -456,6 +457,24 @@ const VOUCHERS = [
       setTimeout(() => SFX.shehnai(), 180);
     }
   });
+
+  // Reflect the default-on state in the button straight away.
+  soundBtn.textContent = "🔊";
+  soundBtn.setAttribute("aria-pressed", "true");
+  soundBtn.classList.add("ringing");
+  soundBtn.title = "Sound on — tap to mute";
+
+  // Browsers block audio until the visitor interacts, so unlock the context on
+  // the first gesture and give a small flourish once it's actually audible.
+  const unlockAudio = () => {
+    if (!soundOn) return;
+    ensureAudio();
+    if (audioCtx?.state === "suspended") audioCtx.resume();
+    SFX.shehnai();
+  };
+  addEventListener("pointerdown", unlockAudio, { once: true });
+  addEventListener("keydown", unlockAudio, { once: true });
+  addEventListener("touchstart", unlockAudio, { once: true, passive: true });
 
   /* ==================================================
      NAV — sticky shadow + active link

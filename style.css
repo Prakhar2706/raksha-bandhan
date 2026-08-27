@@ -97,21 +97,22 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.86em;bac
 .icon-btn:hover{transform:scale(1.08) rotate(12deg)}
 .icon-btn[aria-pressed="true"]{background:var(--gold-soft);border-color:var(--gold)}
 
-/* Mobile: keep the links reachable as a scrollable rail rather than hiding them. */
+/* Mobile: wrap the nav onto a second row so every link is visible at once. */
 @media (max-width:640px){
-  .nav{gap:10px;padding:10px 14px}
-  .brand{font-size:.92rem}
+  .nav{flex-wrap:wrap;gap:8px 10px;padding:10px 14px}
+  .brand{font-size:.92rem;margin-right:auto;order:1}
+  #soundBtn{order:2}
   .nav-links{
-    flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;
-    -webkit-overflow-scrolling:touch;mask-image:linear-gradient(90deg,#000 88%,transparent);
+    order:3;flex-basis:100%;width:100%;
+    flex-wrap:wrap;justify-content:center;gap:6px;
+    overflow:visible;mask-image:none;-webkit-mask-image:none;
   }
-  .nav-links::-webkit-scrollbar{display:none}
-  .nav-links a{padding:9px 11px;font-size:.84rem;white-space:nowrap}
+  .nav-links a{padding:8px 12px;font-size:.84rem;white-space:nowrap}
 }
 @media (max-width:420px){
   /* Keep the name readable instead of collapsing to a bare emoji. */
-  .brand{font-size:.82rem;margin-right:6px}
-  .nav-links a{padding:9px 10px;font-size:.8rem}
+  .brand{font-size:.82rem}
+  .nav-links a{padding:7px 10px;font-size:.79rem}
 }
 
 /* ============================================================ BUTTONS */
@@ -178,7 +179,9 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.86em;bac
 @keyframes cue{0%{transform:translateY(0);opacity:1}70%{transform:translateY(16px);opacity:0}100%{opacity:0}}
 
 /* ============================================================ SECTIONS */
+/* Anchor targets clear the sticky nav; it is taller on mobile now that it wraps. */
 .section{max-width:1080px;margin:0 auto;padding:clamp(58px,9vw,110px) clamp(18px,5vw,32px);scroll-margin-top:84px}
+@media (max-width:640px){.section{scroll-margin-top:112px}}
 .hero{scroll-margin-top:0}
 .section-head{text-align:center;margin-bottom:clamp(34px,6vw,58px)}
 .h2{font-family:var(--serif);font-weight:700;font-size:clamp(1.7rem,4.4vw,2.7rem);color:var(--maroon);margin:0 0 12px;line-height:1.15}
