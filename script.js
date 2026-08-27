@@ -142,7 +142,10 @@ const VOUCHERS = [
   const loader = $("#loader");
   const hideLoader = () => {
     loader.classList.add("done");
-    setTimeout(() => burst(innerWidth / 2, innerHeight * 0.38, 70), 260);
+    setTimeout(() => {
+      burst(innerWidth / 2, innerHeight * 0.38, 90);
+      SFX.shehnai();
+    }, 260);
   };
   if (document.readyState === "complete") setTimeout(hideLoader, 700);
   else addEventListener("load", () => setTimeout(hideLoader, 700));
@@ -165,9 +168,11 @@ const VOUCHERS = [
 
   const PALETTE = ["#d92b3f", "#f79219", "#e0a92e", "#f6d68a", "#8c1b32", "#ff8f7a"];
   const rand = (a, b) => a + Math.random() * (b - a);
+  const pick = arr => arr[(Math.random() * arr.length) | 0];
 
   const petals = [];
   const confetti = [];
+  const sparks = [];
 
   function makePetal() {
     return {
@@ -180,16 +185,20 @@ const VOUCHERS = [
       vr: rand(-0.012, 0.012),
       sway: rand(0.4, 1.3),
       phase: rand(0, Math.PI * 2),
-      color: PALETTE[(Math.random() * PALETTE.length) | 0],
+      color: pick(PALETTE),
       alpha: rand(0.35, 0.75),
+      kind: Math.random() < 0.22 ? "flower" : "petal",
     };
   }
 
-  const PETAL_COUNT = reduceMotion ? 0 : (innerWidth < 640 ? 16 : 30);
+  const PETAL_COUNT = reduceMotion ? 0 : (innerWidth < 640 ? 16 : 32);
   for (let i = 0; i < PETAL_COUNT; i++) petals.push(makePetal());
 
-  function burst(x, y, count = 60) {
+  const SHAPES = ["rect", "circle", "star", "ribbon"];
+
+  function burst(x, y, count = 60, opts = {}) {
     if (reduceMotion) return;
+    const shapes = opts.shapes || SHAPES;
     for (let i = 0; i < count; i++) {
       const a = rand(0, Math.PI * 2);
       const sp = rand(3, 12);
@@ -197,16 +206,55 @@ const VOUCHERS = [
         x, y,
         vx: Math.cos(a) * sp,
         vy: Math.sin(a) * sp - rand(2, 5),
-        w: rand(5, 11),
-        h: rand(3, 6),
+        w: rand(5, 12),
+        h: rand(3, 7),
         rot: rand(0, Math.PI * 2),
         vr: rand(-0.3, 0.3),
-        color: PALETTE[(Math.random() * PALETTE.length) | 0],
+        color: opts.color || pick(PALETTE),
+        shape: pick(shapes),
+        wobble: rand(0.5, 2),
+        phase: rand(0, Math.PI * 2),
         life: 1,
-        decay: rand(0.006, 0.014),
+        decay: rand(0.005, 0.013),
       });
     }
-    if (confetti.length > 900) confetti.splice(0, confetti.length - 900);
+    if (confetti.length > 1100) confetti.splice(0, confetti.length - 1100);
+  }
+
+  // Cursor / touch sparkle trail.
+  function addSpark(x, y) {
+    sparks.push({
+      x, y,
+      vx: rand(-0.6, 0.6),
+      vy: rand(-1.1, -0.2),
+      r: rand(1.2, 3.2),
+      color: pick(PALETTE),
+      life: 1,
+      decay: rand(0.02, 0.05),
+    });
+    if (sparks.length > 220) sparks.splice(0, sparks.length - 220);
+  }
+
+  if (!reduceMotion && matchMedia("(pointer:fine)").matches) {
+    let lastSpark = 0;
+    addEventListener("pointermove", e => {
+      const now = performance.now();
+      if (now - lastSpark < 28) return;
+      lastSpark = now;
+      addSpark(e.clientX, e.clientY);
+    }, { passive: true });
+  }
+
+  function star(c, r) {
+    c.beginPath();
+    for (let i = 0; i < 10; i++) {
+      const rad = i % 2 ? r * 0.45 : r;
+      const a = (Math.PI / 5) * i - Math.PI / 2;
+      i ? c.lineTo(Math.cos(a) * rad, Math.sin(a) * rad)
+        : c.moveTo(Math.cos(a) * rad, Math.sin(a) * rad);
+    }
+    c.closePath();
+    c.fill();
   }
 
   let t = 0;
@@ -214,11 +262,12 @@ const VOUCHERS = [
     t += 0.016;
     ctx.clearRect(0, 0, innerWidth, innerHeight);
 
+    // ---- falling petals & marigold blooms ----
     for (const p of petals) {
       p.y += p.vy;
       p.x += p.vx + Math.sin(t * p.sway + p.phase) * 0.5;
       p.rot += p.vr;
-      if (p.y > innerHeight + 20) { Object.assign(p, makePetal(), { y: -20 }); }
+      if (p.y > innerHeight + 20) Object.assign(p, makePetal(), { y: -20 });
       if (p.x < -30) p.x = innerWidth + 20;
       if (p.x > innerWidth + 30) p.x = -20;
 
@@ -227,28 +276,78 @@ const VOUCHERS = [
       ctx.rotate(p.rot);
       ctx.globalAlpha = p.alpha;
       ctx.fillStyle = p.color;
-      ctx.beginPath();
-      ctx.ellipse(0, 0, p.r, p.r * 0.55, 0, 0, Math.PI * 2);
-      ctx.fill();
+      if (p.kind === "flower") {
+        for (let k = 0; k < 5; k++) {
+          ctx.rotate((Math.PI * 2) / 5);
+          ctx.beginPath();
+          ctx.ellipse(0, -p.r * 0.7, p.r * 0.42, p.r * 0.8, 0, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.globalAlpha = p.alpha * 0.9;
+        ctx.fillStyle = "#f6d68a";
+        ctx.beginPath();
+        ctx.arc(0, 0, p.r * 0.34, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        ctx.beginPath();
+        ctx.ellipse(0, 0, p.r, p.r * 0.55, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
       ctx.restore();
     }
 
+    // ---- confetti ----
     for (let i = confetti.length - 1; i >= 0; i--) {
       const c = confetti[i];
-      c.vy += 0.22;         // gravity
-      c.vx *= 0.99;         // drag
-      c.x += c.vx;
+      c.vy += 0.22;                                  // gravity
+      c.vx *= 0.99;                                  // drag
+      c.x += c.vx + Math.sin(t * c.wobble + c.phase) * 0.6;
       c.y += c.vy;
       c.rot += c.vr;
       c.life -= c.decay;
-      if (c.life <= 0 || c.y > innerHeight + 40) { confetti.splice(i, 1); continue; }
+      if (c.life <= 0 || c.y > innerHeight + 50) { confetti.splice(i, 1); continue; }
 
       ctx.save();
       ctx.translate(c.x, c.y);
       ctx.rotate(c.rot);
       ctx.globalAlpha = Math.max(0, Math.min(1, c.life));
       ctx.fillStyle = c.color;
-      ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h);
+      if (c.shape === "circle") {
+        ctx.beginPath();
+        ctx.arc(0, 0, c.h, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (c.shape === "star") {
+        star(ctx, c.w * 0.6);
+      } else if (c.shape === "ribbon") {
+        // a curled streamer: squashed sine sliver
+        ctx.beginPath();
+        ctx.moveTo(-c.w, 0);
+        ctx.quadraticCurveTo(0, Math.sin(t * 4 + c.phase) * c.w, c.w, 0);
+        ctx.lineWidth = c.h * 0.7;
+        ctx.strokeStyle = c.color;
+        ctx.stroke();
+      } else {
+        ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h);
+      }
+      ctx.restore();
+    }
+
+    // ---- cursor sparks ----
+    for (let i = sparks.length - 1; i >= 0; i--) {
+      const s = sparks[i];
+      s.x += s.vx;
+      s.y += s.vy;
+      s.vy += 0.02;
+      s.life -= s.decay;
+      if (s.life <= 0) { sparks.splice(i, 1); continue; }
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, s.life) * 0.9;
+      ctx.fillStyle = s.color;
+      ctx.shadowColor = s.color;
+      ctx.shadowBlur = 8;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r * s.life, 0, Math.PI * 2);
+      ctx.fill();
       ctx.restore();
     }
 
@@ -258,40 +357,125 @@ const VOUCHERS = [
   requestAnimationFrame(frame);
 
   /* ==================================================
-     SOUND — tiny WebAudio chime, no asset files
+     AUDIO ENGINE — all synthesised, no asset files
      ================================================== */
-  let audioCtx = null, soundOn = false;
+  let audioCtx = null, master = null, soundOn = false;
   const soundBtn = $("#soundBtn");
 
-  function chime(freq = 880, dur = 0.16) {
-    if (!soundOn) return;
+  function ensureAudio() {
+    if (audioCtx) return audioCtx;
     try {
-      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = "sine";
-      osc.frequency.value = freq;
-      gain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.12, audioCtx.currentTime + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + dur);
-      osc.connect(gain).connect(audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + dur + 0.02);
-    } catch { /* audio unavailable — silently ignore */ }
+      const AC = window.AudioContext || window.webkitAudioContext;
+      audioCtx = new AC();
+      master = audioCtx.createGain();
+      master.gain.value = 0.5;
+      master.connect(audioCtx.destination);
+    } catch { audioCtx = null; }
+    return audioCtx;
   }
+
+  // Single pitched note. `glide` bends the pitch by that many Hz over its life.
+  function tone({ freq = 880, dur = 0.18, type = "sine", gain = 0.1, delay = 0, glide = 0 } = {}) {
+    if (!soundOn || !ensureAudio()) return;
+    const t0 = audioCtx.currentTime + delay;
+    const osc = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, t0);
+    if (glide) osc.frequency.linearRampToValueAtTime(Math.max(40, freq + glide), t0 + dur);
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(gain, t0 + 0.015);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    osc.connect(g).connect(master);
+    osc.start(t0);
+    osc.stop(t0 + dur + 0.03);
+  }
+
+  // Filtered noise — the percussive layer (dhol hits, whooshes, sparkle texture).
+  function noiseBurst({ dur = 0.16, gain = 0.1, cutoff = 900, type = "lowpass", delay = 0 } = {}) {
+    if (!soundOn || !ensureAudio()) return;
+    const t0 = audioCtx.currentTime + delay;
+    const frames = Math.floor(audioCtx.sampleRate * dur);
+    const buf = audioCtx.createBuffer(1, frames, audioCtx.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < frames; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / frames);
+    const src = audioCtx.createBufferSource();
+    src.buffer = buf;
+    const filt = audioCtx.createBiquadFilter();
+    filt.type = type;
+    filt.frequency.value = cutoff;
+    const g = audioCtx.createGain();
+    g.gain.setValueAtTime(gain, t0);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    src.connect(filt).connect(g).connect(master);
+    src.start(t0);
+  }
+
+  function arpeggio(freqs, step = 0.08, opts = {}) {
+    freqs.forEach((f, i) => tone({ freq: f, delay: i * step, dur: 0.22, gain: 0.075, type: "triangle", ...opts }));
+  }
+
+  // Named cues used across the page.
+  const SFX = {
+    // Raga-ish pentatonic run — the festive flourish.
+    shehnai: () => arpeggio([587, 659, 784, 880, 1046], 0.075, { type: "sine", dur: 0.3, gain: 0.06 }),
+    // Low membrane thump + noise slap.
+    dhol: () => {
+      tone({ freq: 96, dur: 0.22, type: "sine", gain: 0.24, glide: -46 });
+      noiseBurst({ dur: 0.13, gain: 0.14, cutoff: 300 });
+    },
+    sparkle: () => {
+      arpeggio([1046, 1318, 1568, 2093], 0.055, { type: "triangle", dur: 0.18, gain: 0.05 });
+      noiseBurst({ dur: 0.3, gain: 0.03, cutoff: 6000, type: "highpass" });
+    },
+    tick:   () => tone({ freq: 1500, dur: 0.035, type: "square", gain: 0.02 }),
+    flip:   () => { noiseBurst({ dur: 0.13, gain: 0.05, cutoff: 2400, type: "highpass" }); tone({ freq: 520, dur: 0.1, type: "triangle", gain: 0.05, glide: 180 }); },
+    open:   () => { noiseBurst({ dur: 0.34, gain: 0.06, cutoff: 1600, type: "highpass" }); arpeggio([523, 659, 784, 1046], 0.1, { dur: 0.35, gain: 0.07 }); },
+    select: () => { tone({ freq: 700, dur: 0.09, type: "triangle", gain: 0.07 }); tone({ freq: 1050, dur: 0.12, type: "sine", gain: 0.05, delay: 0.06 }); },
+    bell:   () => { tone({ freq: 1318, dur: 0.7, type: "sine", gain: 0.08 }); tone({ freq: 1976, dur: 0.5, type: "sine", gain: 0.03, delay: 0.02 }); },
+    fanfare: () => {
+      arpeggio([523, 659, 784, 1046, 1318], 0.09, { dur: 0.4, gain: 0.08 });
+      SFX.dhol();
+      setTimeout(() => SFX.dhol(), 260);
+      setTimeout(() => SFX.sparkle(), 420);
+    },
+  };
+
+  // Kept for the older call sites: a plain pitched ping.
+  const chime = (freq = 880, dur = 0.16) => tone({ freq, dur, gain: 0.09 });
 
   soundBtn.addEventListener("click", () => {
     soundOn = !soundOn;
     soundBtn.setAttribute("aria-pressed", String(soundOn));
     soundBtn.textContent = soundOn ? "🔊" : "🔔";
-    if (soundOn) { chime(660); setTimeout(() => chime(990), 130); }
+    soundBtn.classList.toggle("ringing", soundOn);
+    if (soundOn) {
+      ensureAudio();
+      if (audioCtx?.state === "suspended") audioCtx.resume();
+      SFX.bell();
+      setTimeout(() => SFX.shehnai(), 180);
+    }
   });
 
   /* ==================================================
      NAV — sticky shadow + active link
      ================================================== */
   const nav = $("#nav");
-  addEventListener("scroll", () => nav.classList.toggle("stuck", scrollY > 12), { passive: true });
+  const progress = $("#scrollProgress");
+  const onScroll = () => {
+    nav.classList.toggle("stuck", scrollY > 12);
+    if (progress) {
+      const max = document.documentElement.scrollHeight - innerHeight;
+      progress.style.transform = `scaleX(${max > 0 ? Math.min(1, scrollY / max) : 0})`;
+    }
+  };
+  addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  // Soft tick when moving between nav items.
+  $$(".nav-links a, .icon-btn").forEach(el =>
+    el.addEventListener("pointerenter", () => SFX.tick(), { passive: true })
+  );
 
   const navLinks = $$(".nav-links a");
   const sections = navLinks
@@ -342,9 +526,12 @@ const VOUCHERS = [
 
   $("#celebrateBtn").addEventListener("click", e => {
     const r = e.currentTarget.getBoundingClientRect();
-    burst(r.left + r.width / 2, r.top, 110);
-    chime(784);
-    setTimeout(() => chime(1046), 120);
+    const cx = r.left + r.width / 2;
+    burst(cx, r.top, 130);
+    burst(cx - 160, r.top + 30, 40);
+    burst(cx + 160, r.top + 30, 40);
+    SFX.dhol();
+    SFX.shehnai();
   });
 
   /* ==================================================
@@ -387,10 +574,10 @@ const VOUCHERS = [
     img.src = p.src;
 
     btn.addEventListener("click", () => {
-      if (btn.dataset.src) openLightbox(btn.dataset.src, p.cap);
-      else burst(innerWidth / 2, innerHeight / 2, 30);
-      chime(700 + idx * 40);
+      if (btn.dataset.src) { openLightbox(btn.dataset.src, p.cap); SFX.open(); }
+      else { burst(innerWidth / 2, innerHeight / 2, 30); SFX.sparkle(); }
     });
+    btn.addEventListener("pointerenter", () => SFX.tick(), { passive: true });
 
     grid.appendChild(btn);
   });
@@ -444,21 +631,22 @@ const VOUCHERS = [
       b.type = "button";
       b.textContent = o.t;
       b.style.animation = reduceMotion ? "" : `fadeUp .4s ${i * 0.07}s backwards`;
-      b.addEventListener("click", () => pick(b, o));
+      b.addEventListener("click", () => pick_(b, o));
+      b.addEventListener("pointerenter", () => SFX.tick(), { passive: true });
       optsEl.appendChild(b);
     });
   }
 
-  function pick(btn, opt) {
+  function pick_(btn, opt) {
     $$(".opt", optsEl).forEach(b => (b.disabled = true));
     btn.classList.add("picked");
     score += opt.s;
     reactEl.textContent = opt.r;
     reactEl.classList.add("show");
-    chime(620 + opt.s * 30);
+    SFX.select();
 
     const r = btn.getBoundingClientRect();
-    burst(r.right - 24, r.top + r.height / 2, 18);
+    burst(r.right - 24, r.top + r.height / 2, 22, { shapes: ["star", "circle"] });
 
     setTimeout(() => {
       qIndex++;
@@ -494,8 +682,10 @@ const VOUCHERS = [
     }, 32);
 
     const r = resultEl.getBoundingClientRect();
-    burst(r.left + r.width / 2, r.top + 90, 140);
-    chime(880); setTimeout(() => chime(1174), 140); setTimeout(() => chime(1318), 280);
+    burst(r.left + r.width / 2, r.top + 90, 170);
+    burst(innerWidth * 0.18, innerHeight * 0.35, 60);
+    burst(innerWidth * 0.82, innerHeight * 0.35, 60);
+    SFX.fanfare();
   }
 
   $("#retryBtn").addEventListener("click", () => {
@@ -531,13 +721,16 @@ const VOUCHERS = [
       </span>`;
     card.addEventListener("click", () => {
       card.classList.toggle("flipped");
-      card.setAttribute("aria-pressed", String(card.classList.contains("flipped")));
-      chime(card.classList.contains("flipped") ? 740 : 560, 0.1);
-      if (card.classList.contains("flipped")) {
+      const open = card.classList.contains("flipped");
+      card.setAttribute("aria-pressed", String(open));
+      SFX.flip();
+      if (open) {
         const r = card.getBoundingClientRect();
-        burst(r.left + r.width / 2, r.top + r.height / 2, 24);
+        burst(r.left + r.width / 2, r.top + r.height / 2, 28, { shapes: ["star", "ribbon"] });
+        SFX.sparkle();
       }
     });
+    card.addEventListener("pointerenter", () => SFX.tick(), { passive: true });
     vGrid.appendChild(card);
   });
 
@@ -577,27 +770,29 @@ const VOUCHERS = [
   env.addEventListener("click", () => {
     env.classList.add("open");
     env.setAttribute("aria-expanded", "true");
-    chime(523); setTimeout(() => chime(659), 130); setTimeout(() => chime(784), 260);
+    SFX.open();
     setTimeout(() => {
       env.style.display = "none";
       letter.hidden = false;
       const r = letter.getBoundingClientRect();
-      burst(r.left + r.width / 2, r.top + 40, 90);
+      burst(r.left + r.width / 2, r.top + 40, 110, { shapes: ["star", "circle", "ribbon"] });
+      SFX.shehnai();
     }, 620);
   });
 
   $("#letterConfetti").addEventListener("click", e => {
     const r = e.currentTarget.getBoundingClientRect();
-    burst(r.left + r.width / 2, r.top, 180);
-    burst(innerWidth * 0.15, innerHeight * 0.3, 60);
-    burst(innerWidth * 0.85, innerHeight * 0.3, 60);
-    chime(1046);
+    burst(r.left + r.width / 2, r.top, 200);
+    burst(innerWidth * 0.12, innerHeight * 0.3, 70);
+    burst(innerWidth * 0.88, innerHeight * 0.3, 70);
+    SFX.fanfare();
   });
 
   /* -------------------------------------------------- easter egg: press "R" */
   addEventListener("keydown", e => {
     if (e.key.toLowerCase() === "r" && !e.metaKey && !e.ctrlKey && !/input|textarea/i.test(e.target.tagName)) {
-      burst(rand(0, innerWidth), rand(0, innerHeight * 0.6), 60);
+      burst(rand(0, innerWidth), rand(0, innerHeight * 0.6), 70);
+      SFX.dhol();
     }
   });
 })();

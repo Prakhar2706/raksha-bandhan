@@ -394,3 +394,102 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.86em;bac
 
 /* focus visibility */
 a:focus-visible,button:focus-visible{outline:2.5px solid var(--marigold);outline-offset:3px;border-radius:8px}
+
+/* ============================================================
+   DECORATIVE LAYER — progress bar, rangoli, diyas, toran,
+   shimmer headings, frame shine
+   ============================================================ */
+
+/* scroll progress ribbon */
+.scroll-progress{
+  position:fixed;top:0;left:0;right:0;height:4px;z-index:70;
+  transform:scaleX(0);transform-origin:0 50%;
+  background:linear-gradient(90deg,var(--red),var(--marigold),var(--gold),var(--red));
+  box-shadow:0 1px 8px rgba(217,43,63,.5);
+  will-change:transform;
+}
+
+/* rangoli mandala behind the hero */
+.rangoli-bg{
+  position:absolute;top:50%;left:50%;
+  width:min(115vmin,760px);height:min(115vmin,760px);
+  transform:translate(-50%,-50%);
+  opacity:.2;z-index:0;pointer-events:none;
+  animation:rangoliSpin 90s linear infinite;
+}
+.rangoli-bg .rangoli-petals{transform-origin:150px 150px;animation:rangoliSpin 46s linear infinite reverse}
+.rangoli-bg .rangoli-dots{transform-origin:150px 150px;animation:dotPulse 5s ease-in-out infinite}
+@keyframes rangoliSpin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes dotPulse{0%,100%{opacity:.45}50%{opacity:.85}}
+
+/* oil lamps with a live flame */
+.diya{position:absolute;bottom:6%;width:clamp(58px,9vw,96px);z-index:1;pointer-events:none;filter:drop-shadow(0 6px 14px rgba(140,60,10,.45))}
+.diya-l{left:6%;animation:float 6s ease-in-out infinite}
+.diya-r{right:6%;animation:float 6s ease-in-out infinite reverse}
+.diya-flame{transform-origin:40px 46px;animation:flame 220ms ease-in-out infinite alternate}
+@keyframes flame{
+  from{transform:scale(1,1) translateX(0);opacity:.92}
+  to{transform:scale(.88,1.12) translateX(.9px);opacity:1}
+}
+@media (max-width:640px){.diya{bottom:3%;width:52px}.diya-l{left:2%}.diya-r{right:2%}}
+
+/* hanging toran of bells between sections */
+.toran{
+  display:flex;justify-content:center;gap:clamp(14px,4vw,38px);
+  padding:0 16px;margin:0 auto -18px;max-width:1080px;position:relative;
+}
+.toran::before{
+  content:"";position:absolute;top:5px;left:8%;right:8%;height:3px;border-radius:3px;
+  background:repeating-linear-gradient(90deg,var(--red) 0 9px,var(--gold) 9px 18px);opacity:.65;
+}
+.toran span{
+  position:relative;width:16px;height:26px;flex:none;
+  border-radius:50% 50% 42% 42%/32% 32% 62% 62%;
+  background:linear-gradient(160deg,#f6d68a,var(--gold) 55%,#a9781a);
+  box-shadow:inset -2px -2px 4px rgba(0,0,0,.22),0 3px 7px rgba(92,16,36,.28);
+  transform-origin:top center;animation:bellSwing 3.4s ease-in-out infinite;
+}
+.toran span::after{
+  content:"";position:absolute;bottom:-4px;left:50%;margin-left:-2.5px;
+  width:5px;height:5px;border-radius:50%;background:#8c5a0e;
+}
+.toran span:nth-child(2n){animation-duration:4s;animation-delay:.25s}
+.toran span:nth-child(3n){animation-duration:3s;animation-delay:.5s}
+@keyframes bellSwing{0%,100%{transform:rotate(-11deg)}50%{transform:rotate(11deg)}}
+@media (max-width:520px){.toran span:nth-child(n+7){display:none}}
+
+/* gold shimmer sweeping across section headings.
+   Guarded: without background-clip:text support the heading stays solid maroon
+   rather than rendering as invisible transparent text. */
+@supports ((-webkit-background-clip:text) or (background-clip:text)){
+  .h2{
+    background-image:linear-gradient(100deg,var(--maroon) 0 38%,#e8bf5c 48%,var(--maroon) 58% 100%);
+    background-size:260% 100%;
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;
+    animation:shimmer 7s ease-in-out infinite;
+  }
+}
+@keyframes shimmer{0%{background-position:120% 0}55%{background-position:-40% 0}100%{background-position:-40% 0}}
+
+/* glossy sweep across photo frames on hover */
+.frame-media::after{
+  content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(115deg,transparent 34%,rgba(255,255,255,.42) 46%,transparent 60%);
+  transform:translateX(-120%);transition:transform .75s cubic-bezier(.2,.7,.3,1);
+}
+.frame:hover .frame-media::after,.frame:focus-visible .frame-media::after{transform:translateX(120%)}
+
+/* the sound toggle keeps ringing while enabled */
+.icon-btn.ringing{animation:bellRing 2.6s ease-in-out infinite}
+@keyframes bellRing{0%,72%,100%{transform:rotate(0)}78%{transform:rotate(15deg)}84%{transform:rotate(-13deg)}90%{transform:rotate(8deg)}}
+
+/* coupon cards lift slightly before being flipped */
+.voucher:hover .v-front{transform:translateY(-5px);transition:transform .3s ease}
+.voucher .v-front{transition:transform .3s ease}
+
+@media (prefers-reduced-motion:reduce){
+  .rangoli-bg,.rangoli-bg .rangoli-petals,.rangoli-bg .rangoli-dots,
+  .diya-flame,.diya-l,.diya-r,.toran span,.h2,.icon-btn.ringing{animation:none!important}
+  .h2{-webkit-text-fill-color:var(--maroon);background-image:none}
+}

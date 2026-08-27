@@ -13,6 +13,9 @@
 </head>
 <body>
 
+<!-- scroll progress -->
+<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
 <!-- ================= LOADER ================= -->
 <div id="loader" class="loader">
   <svg class="loader-rakhi" viewBox="0 0 120 120" aria-hidden="true">
@@ -49,6 +52,48 @@
       <circle cx="60" cy="60" r="9" fill="#7a0f22"/>
       <circle cx="56" cy="56" r="3" fill="#fff" opacity=".55"/>
     </g>
+    <g id="diya">
+      <ellipse cx="40" cy="52" rx="30" ry="11" fill="#8a3c12"/>
+      <path d="M10 50c4 10 16 15 30 15s26-5 30-15z" fill="#b4551c"/>
+      <ellipse cx="40" cy="50" rx="30" ry="9" fill="#d9772c"/>
+      <ellipse cx="40" cy="49" rx="22" ry="6" fill="#6d2b0c" opacity=".65"/>
+      <g class="diya-flame">
+        <ellipse cx="40" cy="30" rx="7" ry="16" fill="url(#gFlameOuter)"/>
+        <ellipse cx="40" cy="34" rx="3.4" ry="9" fill="#fff3c4"/>
+      </g>
+      <ellipse cx="40" cy="30" rx="16" ry="22" fill="url(#gGlow)" opacity=".55"/>
+    </g>
+    <radialGradient id="gFlameOuter" cx="50%" cy="70%">
+      <stop offset="0%" stop-color="#fff7d0"/><stop offset="45%" stop-color="#f9a825"/><stop offset="100%" stop-color="#e2521a" stop-opacity=".25"/>
+    </radialGradient>
+    <radialGradient id="gGlow" cx="50%" cy="55%">
+      <stop offset="0%" stop-color="#ffd479" stop-opacity=".85"/><stop offset="100%" stop-color="#ffd479" stop-opacity="0"/>
+    </radialGradient>
+    <g id="rangoli">
+      <g stroke="#c8881c" fill="none" stroke-width="1.6">
+        <circle cx="150" cy="150" r="140" stroke-dasharray="3 9"/>
+        <circle cx="150" cy="150" r="112"/>
+        <circle cx="150" cy="150" r="58" stroke-dasharray="6 6"/>
+      </g>
+      <g fill="#d92b3f" opacity=".5">
+        <g class="rangoli-petals">
+          <ellipse cx="150" cy="58" rx="13" ry="30"/>
+          <ellipse cx="150" cy="242" rx="13" ry="30"/>
+          <ellipse cx="58" cy="150" rx="30" ry="13"/>
+          <ellipse cx="242" cy="150" rx="30" ry="13"/>
+          <ellipse cx="85" cy="85" rx="12" ry="28" transform="rotate(45 85 85)"/>
+          <ellipse cx="215" cy="215" rx="12" ry="28" transform="rotate(45 215 215)"/>
+          <ellipse cx="215" cy="85" rx="28" ry="12" transform="rotate(45 215 85)"/>
+          <ellipse cx="85" cy="215" rx="28" ry="12" transform="rotate(45 85 215)"/>
+        </g>
+      </g>
+      <g fill="#f79219" opacity=".45" class="rangoli-dots">
+        <circle cx="150" cy="20" r="5"/><circle cx="150" cy="280" r="5"/>
+        <circle cx="20" cy="150" r="5"/><circle cx="280" cy="150" r="5"/>
+        <circle cx="58" cy="58" r="4"/><circle cx="242" cy="242" r="4"/>
+        <circle cx="242" cy="58" r="4"/><circle cx="58" cy="242" r="4"/>
+      </g>
+    </g>
   </defs>
 </svg>
 
@@ -70,6 +115,11 @@
 <!-- ================= HERO ================= -->
 <header class="hero" id="top">
   <div class="marigold-strand" aria-hidden="true"></div>
+
+  <svg class="rangoli-bg" viewBox="0 0 300 300" aria-hidden="true"><use href="#rangoli"/></svg>
+
+  <svg class="diya diya-l" viewBox="0 0 80 70" aria-hidden="true"><use href="#diya"/></svg>
+  <svg class="diya diya-r" viewBox="0 0 80 70" aria-hidden="true"><use href="#diya"/></svg>
 
   <div class="hero-inner">
     <p class="eyebrow">Raksha Bandhan · <span id="year">2026</span></p>
@@ -149,10 +199,14 @@
 </section>
 
 <!-- ================= GALLERY ================= -->
+<div class="toran" aria-hidden="true">
+  <span></span><span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span>
+</div>
 <section id="gallery" class="section">
   <div class="section-head reveal">
     <h2 class="h2">The Photo Evidence</h2>
-    <p class="lede">Kuch purani, kuch nayi \u2014 sab sambhal ke rakhi hui. <span class="muted">Kisi bhi frame pe tap karo.</span></p>
+    <p class="lede">Kuch purani, kuch nayi — sab sambhal ke rakhi hui. <span class="muted">Kisi bhi frame pe tap karo.</span></p>
   </div>
   <div class="gallery" id="galleryGrid"><!-- built by script.js --></div>
 </section>
@@ -190,6 +244,10 @@
 </section>
 
 <!-- ================= LETTER ================= -->
+<div class="toran" aria-hidden="true">
+  <span></span><span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span>
+</div>
 <section id="letter" class="section letter-section">
   <div class="section-head reveal">
     <h2 class="h2">Ab Thoda Sincere Ho Jaate Hain</h2>
