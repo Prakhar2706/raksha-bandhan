@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Happy Raksha Bandhan 🪢</title>
+<meta name="description" content="Aditi ke liye ek chhoti si interactive site, Raksha Bandhan pe.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,500&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪢</text></svg>">
+</head>
+<body>
+
+<!-- ================= LOADER ================= -->
+<div id="loader" class="loader">
+  <svg class="loader-rakhi" viewBox="0 0 120 120" aria-hidden="true">
+    <circle cx="60" cy="60" r="34" fill="none" stroke="var(--gold)" stroke-width="2" stroke-dasharray="4 6"/>
+    <g class="loader-petals">
+      <use href="#rakhi-flower" x="0" y="0"/>
+    </g>
+  </svg>
+  <p class="loader-text">Rakhi baandhi jaa rahi hai<span class="dots"><i>.</i><i>.</i><i>.</i></span></p>
+</div>
+
+<!-- shared SVG defs -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="gGold" cx="50%" cy="40%">
+      <stop offset="0%" stop-color="#fff6d6"/><stop offset="55%" stop-color="#f2c14e"/><stop offset="100%" stop-color="#c8881c"/>
+    </radialGradient>
+    <radialGradient id="gRed" cx="50%" cy="40%">
+      <stop offset="0%" stop-color="#ff8f7a"/><stop offset="60%" stop-color="#d92b3f"/><stop offset="100%" stop-color="#8c1024"/>
+    </radialGradient>
+    <g id="rakhi-flower">
+      <g class="petal-ring">
+        <ellipse cx="60" cy="30" rx="9" ry="18" fill="url(#gRed)"/>
+        <ellipse cx="60" cy="90" rx="9" ry="18" fill="url(#gRed)"/>
+        <ellipse cx="30" cy="60" rx="18" ry="9" fill="url(#gRed)"/>
+        <ellipse cx="90" cy="60" rx="18" ry="9" fill="url(#gRed)"/>
+        <ellipse cx="39" cy="39" rx="8" ry="16" fill="url(#gRed)" transform="rotate(45 39 39)"/>
+        <ellipse cx="81" cy="81" rx="8" ry="16" fill="url(#gRed)" transform="rotate(45 81 81)"/>
+        <ellipse cx="81" cy="39" rx="16" ry="8" fill="url(#gRed)" transform="rotate(45 81 39)"/>
+        <ellipse cx="39" cy="81" rx="16" ry="8" fill="url(#gRed)" transform="rotate(45 39 81)"/>
+      </g>
+      <circle cx="60" cy="60" r="22" fill="url(#gGold)"/>
+      <circle cx="60" cy="60" r="22" fill="none" stroke="#8c5a0e" stroke-width="1.5" opacity=".5"/>
+      <circle cx="60" cy="60" r="9" fill="#7a0f22"/>
+      <circle cx="56" cy="56" r="3" fill="#fff" opacity=".55"/>
+    </g>
+  </defs>
+</svg>
+
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<!-- ================= NAV ================= -->
+<nav class="nav" id="nav">
+  <a class="brand" href="#top"><span class="brand-knot">🪢</span> <span class="brand-label"><span data-sister-full>Aditi</span>'s page</span></a>
+  <div class="nav-links">
+    <a href="#story">Nautanki</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#quiz">Quiz</a>
+    <a href="#vouchers">Coupons</a>
+    <a href="#letter">Message</a>
+  </div>
+  <button id="soundBtn" class="icon-btn" aria-pressed="false" title="Toggle sparkle sounds">🔔</button>
+</nav>
+
+<!-- ================= HERO ================= -->
+<header class="hero" id="top">
+  <div class="marigold-strand" aria-hidden="true"></div>
+
+  <div class="hero-inner">
+    <p class="eyebrow">Raksha Bandhan · <span id="year">2026</span></p>
+    <h1 class="hero-title">
+      <span class="line">Happy Raksha Bandhan,</span>
+      <span class="line name-line"><span id="typed" data-sister-full>Aditi</span><span class="caret"></span></span>
+    </h1>
+    <p class="hero-sub">
+      Ek forwarded <em>Good Morning</em> wali image bhej sakta tha. Poori website bana di instead.
+      Effort note karo. Zor se. Sabko batao.
+    </p>
+
+    <div class="rakhi-stage">
+      <svg class="rakhi-big" viewBox="0 0 120 120" role="img" aria-label="A spinning rakhi">
+        <use href="#rakhi-flower"/>
+      </svg>
+      <div class="thread thread-l" aria-hidden="true"></div>
+      <div class="thread thread-r" aria-hidden="true"></div>
+    </div>
+
+    <div class="hero-actions">
+      <button id="celebrateBtn" class="btn btn-primary">Confetti ke liye tap karo 🎉</button>
+      <a class="btn btn-ghost" href="#quiz">Nautanki test do →</a>
+    </div>
+    <p class="hero-hint">(button trick nahi hai. ek baar ke liye.)</p>
+  </div>
+
+  <div class="scroll-cue" aria-hidden="true"><span></span></div>
+</header>
+
+<main>
+
+<!-- ================= STORY / TIMELINE ================= -->
+<section id="story" class="section">
+  <div class="section-head reveal">
+    <h2 class="h2">Certified Nautanki Incidents</h2>
+    <p class="lede">Ek chhota, poori tarah se factual archive. Notarised by nobody.</p>
+  </div>
+
+  <ol class="timeline">
+    <li class="tl-item reveal">
+      <div class="tl-dot" aria-hidden="true">💬</div>
+      <div class="tl-card">
+        <h3>Pehli Random Baat</h3>
+        <p>Kis janam ka connection tha pata nahi, par ek normal si baat se shuru hua aur phir kabhi ruka hi nahi.</p>
+      </div>
+    </li>
+    <li class="tl-item reveal">
+      <div class="tl-dot" aria-hidden="true">📵</div>
+      <div class="tl-card">
+        <h3>Bina Baat Kiye Wala Din</h3>
+        <p>Ek din baat na ho to din thoda boring lagta hai. Yeh maine likha hai, court mein deny kar dunga.</p>
+      </div>
+    </li>
+    <li class="tl-item reveal">
+      <div class="tl-dot" aria-hidden="true">🤝</div>
+      <div class="tl-card">
+        <h3>Taang Kheechne Ka Season</h3>
+        <p>Saal bhar chalta hai, off-season nahi hota. Dono expert ho gaye hain, koi jeeta nahi aaj tak.</p>
+      </div>
+    </li>
+    <li class="tl-item reveal">
+      <div class="tl-dot" aria-hidden="true">🎭</div>
+      <div class="tl-card">
+        <h3>Full-Time Nautanki Award</h3>
+        <p>Behen kam, pareshan karne wali zyada. Part-time sweet bhi ho — woh part limited edition hai.</p>
+      </div>
+    </li>
+    <li class="tl-item reveal">
+      <div class="tl-dot" aria-hidden="true">🪢</div>
+      <div class="tl-card">
+        <h3>Aaj Ka Din</h3>
+        <p>Rakhi khoon se nahi, choice se bandhi hai. Aur choice roz confirm hoti hai — faltu ki bakchodi ke saath.</p>
+      </div>
+    </li>
+  </ol>
+</section>
+
+<!-- ================= GALLERY ================= -->
+<section id="gallery" class="section">
+  <div class="section-head reveal">
+    <h2 class="h2">The Photo Evidence</h2>
+    <p class="lede">Blackmail material, pyaar se archived. <span class="muted">Kisi bhi frame pe tap karo.</span></p>
+  </div>
+  <div class="gallery" id="galleryGrid"><!-- built by script.js --></div>
+  <p class="gallery-note reveal">
+    Photos change karni hain? <code>photos/</code> mein files daalo aur
+    <code>script.js</code> ki <code>PHOTOS</code> list edit karo.
+  </p>
+</section>
+
+<!-- ================= QUIZ ================= -->
+<section id="quiz" class="section">
+  <div class="section-head reveal">
+    <h2 class="h2">Official Nautanki Compatibility Test</h2>
+    <p class="lede">Koi galat jawaab nahi hai. Bilkul hain galat jawaab.</p>
+  </div>
+
+  <div class="quiz-card reveal">
+    <div class="quiz-progress"><div class="quiz-bar" id="quizBar"></div></div>
+    <p class="quiz-count" id="quizCount">Question 1 of 7</p>
+    <h3 class="quiz-q" id="quizQ">Loading…</h3>
+    <div class="quiz-options" id="quizOptions"></div>
+    <p class="quiz-react" id="quizReact" role="status"></p>
+
+    <div class="quiz-result" id="quizResult" hidden>
+      <div class="score-ring" id="scoreRing"><span id="scoreNum">0</span><small>/ 70</small></div>
+      <h3 id="verdictTitle">…</h3>
+      <p id="verdictText">…</p>
+      <button class="btn btn-ghost" id="retryBtn">Result galat hai. Dobara ↺</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= VOUCHERS ================= -->
+<section id="vouchers" class="section">
+  <div class="section-head reveal">
+    <h2 class="h2">Coupons, In Person Redeemable</h2>
+    <p class="lede">Card flip karo. Terms emotional hain, legal nahi.</p>
+  </div>
+  <div class="vouchers" id="voucherGrid"><!-- built by script.js --></div>
+</section>
+
+<!-- ================= LETTER ================= -->
+<section id="letter" class="section letter-section">
+  <div class="section-head reveal">
+    <h2 class="h2">Ab Thoda Sincere Ho Jaate Hain</h2>
+    <p class="lede">Sarcasm off, exactly ek message ke liye. Screenshot mat lena.</p>
+  </div>
+
+  <div class="envelope-wrap reveal">
+    <button class="envelope" id="envelope" aria-expanded="false" aria-controls="letterBody">
+      <span class="env-flap" aria-hidden="true"></span>
+      <span class="env-body" aria-hidden="true"></span>
+      <span class="env-seal" aria-hidden="true">🪢</span>
+      <span class="env-label">Kholo mujhe</span>
+    </button>
+
+    <article class="letter-body" id="letterBody" hidden>
+      <p>Hey <span data-sister-full>Aditi</span>,</p>
+      <p>
+        Pata nahi kis janam ka connection tha jo tum meri life mein aa gayi 😂❤️
+        Aur ab haal ye hai ki bina baat kiye din thoda boring sa lagta hai!
+      </p>
+      <p>
+        Tum behen kam aur full-time pareshan karne wali + part-time sweet +
+        full-time nautanki zyada ho 🤣
+      </p>
+      <p>
+        Tumhare saath hasi-mazaak, taang kheechna aur faltu ki bakchodi —
+        sab apne level ka hai 😂
+      </p>
+      <p>
+        Bas aise hi hamesha khush reh, mast reh aur mujhe pareshan karti reh 😌❤️
+      </p>
+      <p>
+        Aur haan, zyada hawa mein mat uddna… special ho, VIP nahi 😂😂❤️
+      </p>
+      <p class="sign">— tumhara bhai 🪢</p>
+      <button class="btn btn-primary" id="letterConfetti">Iske liye confetti banta hai 🎊</button>
+    </article>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <p>Happy Raksha Bandhan, <span data-sister-full>Aditi</span>. 🪢</p>
+  <p class="muted">Bahut mehnat aur thodi si nautanki ke saath banaya gaya.</p>
+</footer>
+
+<!-- lightbox -->
+<div class="lightbox" id="lightbox" hidden>
+  <button class="lb-close" id="lbClose" aria-label="Close">✕</button>
+  <figure class="lb-fig">
+    <img id="lbImg" alt="" hidden>
+    <figcaption id="lbCap"></figcaption>
+  </figure>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
