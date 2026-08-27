@@ -16,26 +16,26 @@ const CONFIG = {
    Any file that fails to load shows a decorated placeholder instead.
    ------------------------------------------------------------ */
 const PHOTOS = [
-  { src: "photos/01.jpg", cap: "Exhibit A. Koi sawaal nahi.",           emoji: "🌟" },
-  { src: "photos/02.jpg", cap: "Pose aise, jaise camera udhaar de",      emoji: "💅" },
-  { src: "photos/03.jpg", cap: "Full main-character energy",             emoji: "🎬" },
-  { src: "photos/04.jpg", cap: "Certified unbothered",                   emoji: "😌" },
-  { src: "photos/05.jpg", cap: "Outfit: undefeated",                     emoji: "✨" },
-  { src: "photos/06.jpg", cap: "Chalees photos mein se ek",              emoji: "📸" },
-  { src: "photos/07.jpg", cap: "Smile aisi, jaise pareshan nahi kiya",   emoji: "😇" },
-  { src: "photos/08.jpg", cap: "Blackmail material, pyaar se archived",  emoji: "🤫" },
-  { src: "photos/09.jpg", cap: "Festival fits, unbeatable",             emoji: "🪔" },
-  { src: "photos/10.jpg", cap: "Yeh wali frame mein jaa rahi hai",       emoji: "🖼️" },
-  { src: "photos/11.jpg", cap: "Suspiciously photogenic, as usual",      emoji: "🌸" },
-  { src: "photos/12.jpg", cap: "Nabbe takes, yeh ek final",              emoji: "🔁" },
-  { src: "photos/13.jpg", cap: "Theek hai. Acchi lag rahi ho. Khush?",   emoji: "🙃" },
-  { src: "photos/14.jpg", cap: "Nautanki, caught mid-pose",              emoji: "👑" },
-  { src: "photos/15.jpg", cap: "Historically important. Trust me.",      emoji: "📜" },
-  { src: "photos/16.jpg", cap: "Khatarnak close to a good photo",        emoji: "💫" },
-  { src: "photos/17.jpg", cap: "Filed under: favourite log",             emoji: "💛" },
-  { src: "photos/18.jpg", cap: "Yahi face hai jo kuch nahi sunta",       emoji: "🗣️" },
-  { src: "photos/19.jpg", cap: "Absolute scene-stealer",                emoji: "🌺" },
-  { src: "photos/20.jpg", cap: "Aur phir bhi, sabse best",               emoji: "🪢" },
+  { src: "photos/01.jpg", cap: "Yeh wali favourite hai",          emoji: "🌟" },
+  { src: "photos/02.jpg", cap: "Camera ka favourite subject",     emoji: "💅" },
+  { src: "photos/03.jpg", cap: "Smile pe copyright hona chahiye", emoji: "🎬" },
+  { src: "photos/04.jpg", cap: "Bilkul unbothered",               emoji: "😌" },
+  { src: "photos/05.jpg", cap: "Yeh outfit yaad hai?",            emoji: "✨" },
+  { src: "photos/06.jpg", cap: "Ek hi pose, chalees photos",      emoji: "📸" },
+  { src: "photos/07.jpg", cap: "Sabse pyaari nautanki",           emoji: "😇" },
+  { src: "photos/08.jpg", cap: "Isko delete nahi karne wala",     emoji: "🤫" },
+  { src: "photos/09.jpg", cap: "Tyohaar wali chamak",             emoji: "🪔" },
+  { src: "photos/10.jpg", cap: "Frame karwane layak",             emoji: "🖼️" },
+  { src: "photos/11.jpg", cap: "Har photo mein perfect",          emoji: "🌸" },
+  { src: "photos/12.jpg", cap: "Aur yeh final take tha",          emoji: "🔁" },
+  { src: "photos/13.jpg", cap: "Theek hai, acchi lag rahi ho",    emoji: "🙃" },
+  { src: "photos/14.jpg", cap: "Nakhre level: expert",            emoji: "👑" },
+  { src: "photos/15.jpg", cap: "Purani photo, best photo",        emoji: "📜" },
+  { src: "photos/16.jpg", cap: "Isme sach mein khush lag rahi ho", emoji: "💫" },
+  { src: "photos/17.jpg", cap: "Favourite logo ki list mein top", emoji: "💛" },
+  { src: "photos/18.jpg", cap: "Yeh expression legendary hai",    emoji: "🗣️" },
+  { src: "photos/19.jpg", cap: "Poora scene tum le gayi",         emoji: "🌺" },
+  { src: "photos/20.jpg", cap: "Aur yeh sabse pyaari",            emoji: "🪢" },
 ];
 
 /* ------------------------------------------------------------ QUIZ */
@@ -50,12 +50,12 @@ const QUESTIONS = [
     ],
   },
   {
-    q: "Ek din baat na ho to kya hota hai?",
+    q: "Hum dono ke chats mein zyada kya hota hai?",
     opts: [
-      { t: "Din boring lagta hai. Maan liya.",                s: 10, r: "Finally admit kar diya. Yeh screenshot ja raha hai." },
-      { t: "Kuch nahi hota. Main busy thi.",                  s: 7, r: "Jhooth. Teen 'hello?' messages aaye the." },
-      { t: "Main peace enjoy karti hoon, honestly.",          s: 8, r: "Peace 40 minute chalti hai maximum. Data hai mere paas." },
-      { t: "Main pehle message karti hoon, always.",          s: 9, r: "Yeh sach hai. Credit deta hoon." },
+      { t: "Bakchodi. Sirf bakchodi.",                        s: 10, r: "Koi padh le to samajh hi na paaye kya chal raha hai." },
+      { t: "Tum complain karti ho, main sunta hoon.",          s: 9, r: "Roles clear hain. Aise hi chalta rahe." },
+      { t: "Memes forward, baaki silence.",                    s: 9, r: "Modern friendship ki official definition." },
+      { t: "Ek dusre ko insult, pyaar se.",                    s: 10, r: "Yahi hai asli love language. Baaki sab dikhawa." },
     ],
   },
   {
@@ -113,12 +113,12 @@ const VERDICTS = [
 
 /* ------------------------------------------------------------ VOUCHERS */
 const VOUCHERS = [
-  { emoji: "🍫", title: "Chocolate, Acchi Wali",        back: "Ek acchi chocolate, meri taraf se, bina taunt ke. Poora chocolate hisaab ek baar mein settle.", terms: "Non-transferable. Bhookh lagne tak valid." },
-  { emoji: "📞", title: "2 AM Call, Bina Sawaal",        back: "Koi bhi time, koi bhi crisis. Na explanation chahiye, na lecture milega. Genuinely unlimited.", terms: "No expiry. Ever. Yeh wala sach hai." },
-  { emoji: "💻", title: "Lifetime Tech Support",        back: "Wi-Fi, laptop, phone, woh ek printer. Main audibly sigh karunga, phir theek kar dunga.", terms: "Sigh included aur mandatory hai." },
-  { emoji: "🤐", title: "Ek Guaranteed Cover Story",     back: "Ek (1) alibi, tumhari choice ka, ekdum straight face ke saath deliver kiya jayega.", terms: "Legal hona chahiye. Ideally." },
-  { emoji: "🍜", title: "Khaana, Meri Taraf Se",         back: "Restaurant tumhara pick, bill mera. Price pe comment nahi karunga. Zor se.", terms: "Mann mein comment ho sakta hai." },
-  { emoji: "🏆", title: "'Tum Sahi Thi' Coupon",         back: "Ek baar redeemable, tumhare chune hue witnesses ke saamne. Saaf saaf bolunga.", terms: "One use only. Moment soch ke choose karo." },
+  { emoji: "🍫", title: "Chocolate, Acchi Wali",        back: "Jo bologi wahi, jitni bologi utni. Ek baar bhi nahi bolunga ki mehengi hai.", terms: "Ek hi condition: aadha mujhe milega." },
+  { emoji: "📞", title: "2 AM Call, Bina Sawaal",        back: "Time dekhe bina uthaunga. Na 'kal baat karte hain', na lecture. Bas sun lunga jitna bolna ho.", terms: "Expiry nahi hai. Yeh wala sach hai." },
+  { emoji: "💻", title: "Lifetime Tech Support",        back: "Phone, laptop, Wi-Fi, koi bhi weird error. Bina samjhaye chup-chaap theek kar dunga.", terms: "Ek gehri saans included hai. Free." },
+  { emoji: "🤐", title: "Ek Guaranteed Cover Story",     back: "Jab bolo, poore confidence se tumhari baat pe haan bhar dunga. Story tumhari, delivery meri.", terms: "Bas mujhe pehle bata dena." },
+  { emoji: "🍜", title: "Khaana, Meri Taraf Se",         back: "Jagah tumhari pasand, bill mera. Menu ke right side dekhne ki zaroorat nahi hai.", terms: "Dessert bhi isi mein hai." },
+  { emoji: "🏆", title: "'Tum Sahi Thi' Coupon",         back: "Ek baar, saaf saaf, sabke saamne maan lunga ki tum sahi thi aur main galat tha.", terms: "Sirf ek baar. Soch ke use karna." },
 ];
 
 /* ============================================================
