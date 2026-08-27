@@ -509,37 +509,6 @@ const VOUCHERS = [
     el.addEventListener("pointerenter", () => SFX.tick(), { passive: true })
   );
 
-  /* ---------- mobile drawer ---------- */
-  const navToggle = $("#navToggle");
-  const navBackdrop = $("#navBackdrop");
-  const navLinksBox = $("#navLinks");
-
-  function setNav(open) {
-    nav.classList.toggle("open", open);
-    navToggle.setAttribute("aria-expanded", String(open));
-    navToggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
-    navBackdrop.hidden = !open;
-    document.body.classList.toggle("nav-locked", open);
-    if (open) navLinksBox.querySelector("a")?.focus({ preventScroll: true });
-  }
-
-  navToggle.addEventListener("click", () => {
-    setNav(!nav.classList.contains("open"));
-    SFX.flip();
-  });
-  navBackdrop.addEventListener("click", () => setNav(false));
-  // Tapping a link should navigate, then get the drawer out of the way.
-  navLinksBox.addEventListener("click", e => {
-    if (e.target.closest("a")) setNav(false);
-  });
-  addEventListener("keydown", e => {
-    if (e.key === "Escape" && nav.classList.contains("open")) setNav(false);
-  });
-  // Resizing back to desktop must never leave the drawer state stuck on.
-  matchMedia("(min-width:761px)").addEventListener?.("change", e => {
-    if (e.matches) setNav(false);
-  });
-
   const navLinks = $$(".nav-links a");
   const sections = navLinks
     .map(a => document.getElementById(a.getAttribute("href").slice(1)))
