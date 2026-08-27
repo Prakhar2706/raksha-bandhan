@@ -382,6 +382,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.86em;bac
   max-width:640px;animation:fadeUp .7s ease;
 }
 .letter-body p{margin:0 0 18px;line-height:1.85;color:var(--ink);font-size:1.02rem}
+.letter-body strong{font-weight:700;color:var(--maroon-2);background:linear-gradient(180deg,transparent 62%,rgba(247,146,25,.32) 62%)}
 .letter-body .sign{font-family:var(--serif);font-style:italic;color:var(--maroon-2);font-size:1.1rem;margin-bottom:24px}
 
 /* ============================================================ FOOTER */
